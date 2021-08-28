@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:edge
 MAINTAINER seantur
 
 RUN apk add borgbackup openssh supervisor --no-cache \

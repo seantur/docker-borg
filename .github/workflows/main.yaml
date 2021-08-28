@@ -27,5 +27,10 @@ jobs:
       - name: Ensure borg is present
         run: docker run --rm $REPO borg
 
+      - name: tag with borg version
+        run: docker tag $REPO:latest $REPO:$(docker run --rm $REPO borg --version | cut -d " " -f 2)
+
       - name: publish docker image
-        run: docker push $REPO
+        run:  |
+          docker push $REPO:latest \
+          && docker push $REPO:$(docker run --rm $REPO borg --version | cut -d " " -f 2)
