@@ -27,10 +27,14 @@ jobs:
       - name: Ensure borg is present
         run: docker run --rm $REPO borg
 
+      - name: Get borg version
+        run: |
+          echo 'borg_version=$(docker run --rm $REPO borg --version | cut -d " " -f 2)' >> $GITHUB_ENV
+
       - name: tag with borg version
-        run: docker tag $REPO:latest $REPO:$(docker run --rm $REPO borg --version | cut -d " " -f 2)
+        run: docker tag $REPO:latest $REPO:"${{ env.borg_version }}"
 
       - name: publish docker image
         run:  |
           docker push $REPO:latest \
-          && docker push $REPO:$(docker run --rm $REPO borg --version | cut -d " " -f 2)
+          && docker push $REPO:"${{ env.borg_version }}"
